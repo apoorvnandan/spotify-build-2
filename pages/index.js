@@ -1,34 +1,28 @@
-import { signOut, useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import PlaylistView from '@/components/PlaylistView'
+import Sidebar from '@/components/Sidebar'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 
 export default function Home() {
   const { data: session } = useSession()
-  const [x, setX] = useState('')
-  const [playlists, setPlaylists] = useState([])
+  const [view, setView] = useState("playlist") // {"playlist", "library", "search"}
+  const [globalPlaylistId, setGlobalPlaylistId] = useState(null);
 
-  useEffect(() => {
-    async function f() {
-      if (session && session.user && session.user.accessToken) {
-        setX(session.user.accessToken)
-        const response = await fetch("https://api.spotify.com/v1/me/playlists", {
-          headers: {
-            Authorization: `Bearer ${session.user.accessToken}`
-          }
-        })
-        const data = await response.json()
-        setPlaylists(data.items)
-      }
-    }
-    f()
-  }, [session])
-  // console.log(session.user.accessToken)
-  // accessToken -> Spotify API -> 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div>playlists:</div>
-      {playlists.map((playlist) => <div key={playlist.id}>{playlist.name}</div>)}
-      <div><button onClick={() => signOut()}>Sign out</button></div>
+    <main className="bg-black h-screen overflow-hidden">
+      <div className="flex w-full">
+        {/* sidebar */}
+        <Sidebar
+          setGlobalPlaylistId={setGlobalPlaylistId}
+        />
+        {view == "playlist" && <PlaylistView globalPlaylistId={globalPlaylistId} />}
+        {view == "search" && <div>search</div>}
+        {view == "library" && <div>library</div>}
+      </div>
+      <div className="sticky bottom-0 z-50">
+        {/* player */}
+      </div>
     </main>
   )
 }
