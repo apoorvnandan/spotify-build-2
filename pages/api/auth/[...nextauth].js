@@ -34,7 +34,9 @@ async function refreshAccessToken(token) {
 const scopes = [
     "user-read-email",
     "playlist-read-private",
-    "playlist-read-collaborative"
+    "playlist-read-collaborative",
+    "user-read-currently-playing",
+    "user-modify-playback-state"
 ].join(",")
 
 const params = {

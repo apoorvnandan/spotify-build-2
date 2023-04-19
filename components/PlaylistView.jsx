@@ -1,7 +1,8 @@
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import Song from './Song';
+import { shuffle } from 'lodash';
 
 const colors = [
     'from-indigo-500',
@@ -13,7 +14,7 @@ const colors = [
     'from-purple-500'
 ]
 
-const PlaylistView = ({ globalPlaylistId }) => {
+const PlaylistView = ({ globalPlaylistId, setGlobalTrackId, setGlobalIsPlaying }) => {
     const { data: session } = useSession()
     const [color, setColor] = useState(colors[0])
     const [opacity, setOpacity] = useState(0)
@@ -33,6 +34,10 @@ const PlaylistView = ({ globalPlaylistId }) => {
         if ((scrollPos - offset) > 0) delta = scrollPos - offset
         setTextOpacity(1 - ((textTransition - delta) / textTransition))
     }
+
+    useEffect(() => {
+        setColor(shuffle(colors).pop())
+    }, [globalPlaylistId])
 
     useEffect(() => {
         async function f() {
@@ -59,7 +64,7 @@ const PlaylistView = ({ globalPlaylistId }) => {
                     {playlistState?.name}
                 </div>
             </header>
-            <div className="rounded-full absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-default p-1 pr-2">
+            <div onClick={() => signOut()} className="rounded-full absolute z-20 top-5 right-8 flex items-center bg-black bg-opacity-70 text-white space-x-3 opacity-90 hover:opacity-80 cursor-default p-1 pr-2">
                 <img className='rounded-full w-7 h-7' src={session?.user.image} />
                 <h2 className='text-sm'>Logout</h2>
                 <ChevronDownIcon className="h-5 w-5" />
@@ -74,7 +79,7 @@ const PlaylistView = ({ globalPlaylistId }) => {
                 </section>
                 <div className="flex flex-col text-white space-y-1 px-8 pb-28">
                     {playlistState?.tracks.items.map((track, i) => {
-                        return <Song sno={i} key={track.track.id} track={track} />
+                        return <Song setGlobalIsPlaying={setGlobalIsPlaying} setGlobalTrackId={setGlobalTrackId} sno={i} key={track.track.id} track={track} />
                         // return <div key={track.track.id}>{track.track.name}</div>
                     })}
                 </div>

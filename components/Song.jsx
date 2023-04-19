@@ -1,8 +1,26 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 
-const Song = ({ sno, track }) => {
+const Song = ({ sno, track, setGlobalTrackId, setGlobalIsPlaying }) => {
+    const { data: session } = useSession()
     const [hover, setHover] = useState(false)
+
+    async function playSong(trackId, trackUri) {
+        if (session && session.user && session.user.accessToken) {
+            setGlobalTrackId(trackId)
+            setGlobalIsPlaying(true)
+            const response = await fetch("https://api.spotify.com/v1/me/player/play", {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${session.user.accessToken}`
+                },
+                body: JSON.stringify({
+                    uris: [trackUri]
+                })
+            })
+        }
+    }
 
     function millisToMinutesAndSeconds(millis) {
         var minutes = Math.floor(millis / 60000);
@@ -14,7 +32,7 @@ const Song = ({ sno, track }) => {
         );
     }
     return (
-        <div onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="grid grid-cols-2 text-neutral-400 text-sm py-4 px-5 hover:bg-white hover:bg-opacity-10 rounded-lg cursor-default">
+        <div onClick={() => playSong(track.track.id, track.track.uri)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="grid grid-cols-2 text-neutral-400 text-sm py-4 px-5 hover:bg-white hover:bg-opacity-10 rounded-lg cursor-default">
             <div className='flex items-center space-x-4'>
                 {hover ? <PlayIcon className="w-5 h-5 text-white grow-0 shrink-0" /> : <p className="w-5 grow-0 shrink-0">{sno + 1}</p>}
                 <img className='h-10 w-10' src={track.track.album.images[0].url} />
