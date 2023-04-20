@@ -35,7 +35,7 @@ const Song = ({ sno, track, setGlobalTrackId, setGlobalIsPlaying }) => {
         <div onClick={() => playSong(track.track.id, track.track.uri)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="grid grid-cols-2 text-neutral-400 text-sm py-4 px-5 hover:bg-white hover:bg-opacity-10 rounded-lg cursor-default">
             <div className='flex items-center space-x-4'>
                 {hover ? <PlayIcon className="w-5 h-5 text-white grow-0 shrink-0" /> : <p className="w-5 grow-0 shrink-0">{sno + 1}</p>}
-                <img className='h-10 w-10' src={track.track.album.images[0].url} />
+                <img className='h-10 w-10' src={track.track.album.images[0]?.url} />
                 <div>
                     <p className="w-36 lg:w-64 truncate text-white text-base">{track.track.name}</p>
                     <p className="w-36 lg:w-64 truncate">{track.track.artists[0].name}</p>

@@ -1,5 +1,7 @@
+import Library from '@/components/Library'
 import Player from '@/components/Player'
 import PlaylistView from '@/components/PlaylistView'
+import Search from '@/components/Search'
 import Sidebar from '@/components/Sidebar'
 import { useSession } from 'next-auth/react'
 import { useState } from 'react'
@@ -18,14 +20,22 @@ export default function Home() {
         {/* sidebar */}
         <Sidebar
           setGlobalPlaylistId={setGlobalPlaylistId}
+          view={view}
+          setView={setView}
         />
         {view == "playlist" && <PlaylistView
           globalPlaylistId={globalPlaylistId}
           setGlobalTrackId={setGlobalTrackId}
           setGlobalIsPlaying={setGlobalIsPlaying}
         />}
-        {view == "search" && <div>search</div>}
-        {view == "library" && <div>library</div>}
+        {view == "search" && <Search
+          setGlobalPlaylistId={setGlobalPlaylistId}
+          setView={setView}
+        />}
+        {view == "library" && <Library
+          setGlobalPlaylistId={setGlobalPlaylistId}
+          setView={setView}
+        />}
       </div>
       <div className="sticky bottom-0 z-50">
         <Player
