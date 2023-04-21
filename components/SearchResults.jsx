@@ -1,7 +1,7 @@
 import { PlayIcon } from '@heroicons/react/24/solid';
 import React from 'react';
 
-const SearchResults = ({ playlists, songs, artists, setView, setGlobalPlaylistId }) => {
+const SearchResults = ({ playlists, songs, artists, setView, setGlobalPlaylistId, setGlobalArtistId }) => {
     function millisToMinutesAndSeconds(millis) {
         var minutes = Math.floor(millis / 60000);
         var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -15,6 +15,12 @@ const SearchResults = ({ playlists, songs, artists, setView, setGlobalPlaylistId
         setGlobalPlaylistId(playlist.id)
         setView("playlist")
     }
+
+    function selectArtist(artist) {
+        setView("artist")
+        setGlobalArtistId(artist.id)
+    }
+
     return (
         <div className='flex flex-col gap-8 px-8 h-screen overflow-y-scroll'>
             <div className='grid grid-cols-2'>
@@ -54,7 +60,7 @@ const SearchResults = ({ playlists, songs, artists, setView, setGlobalPlaylistId
                 <h2 className='text-xl font-bold'>Artists</h2>
                 <div className='flex flex-wrap gap-4'>
                     {artists.slice(0, 4).map((artist) => {
-                        return <div key={artist.id} className="cursor-pointer relative group w-56 mb-2 bg-neutral-800 hover:bg-neutral-600 rounded-md p-4">
+                        return <div onClick={() => selectArtist(artist)} key={artist.id} className="cursor-pointer relative group w-56 mb-2 bg-neutral-800 hover:bg-neutral-600 rounded-md p-4">
                             <div className="opacity-0 group-hover:opacity-100 transition-all ease-in-out duration-200 shadow-2xl shadow-neutral-900 absolute z-10 h-12 w-12 flex items-center justify-center rounded-full bg-green-500 top-40 group-hover:top-36 right-8">
                                 <PlayIcon className="h-6 w-6 text-black" />
                             </div>

@@ -2,7 +2,7 @@ import { PlayIcon } from '@heroicons/react/24/solid';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 
-const Song = ({ sno, track, setGlobalTrackId, setGlobalIsPlaying }) => {
+const Song = ({ sno, track, setGlobalTrackId, setGlobalIsPlaying, setView, setGlobalArtistId }) => {
     const { data: session } = useSession()
     const [hover, setHover] = useState(false)
 
@@ -31,6 +31,12 @@ const Song = ({ sno, track, setGlobalTrackId, setGlobalIsPlaying }) => {
                 minutes + ":" + (seconds < 10 ? "0" : "") + seconds
         );
     }
+
+    function selectArtist(artistId) {
+        setView("artist")
+        setGlobalArtistId(artistId)
+    }
+
     return (
         <div onClick={() => playSong(track.track.id, track.track.uri)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} className="grid grid-cols-2 text-neutral-400 text-sm py-4 px-5 hover:bg-white hover:bg-opacity-10 rounded-lg cursor-default">
             <div className='flex items-center space-x-4'>
@@ -38,7 +44,7 @@ const Song = ({ sno, track, setGlobalTrackId, setGlobalIsPlaying }) => {
                 <img className='h-10 w-10' src={track.track.album.images[0]?.url} />
                 <div>
                     <p className="w-36 lg:w-64 truncate text-white text-base">{track.track.name}</p>
-                    <p className="w-36 lg:w-64 truncate">{track.track.artists[0].name}</p>
+                    <p onClick={() => selectArtist(track.track.artists[0].id)} className="w-36 lg:w-64 truncate hover:underline">{track.track.artists[0].name}</p>
                 </div>
 
             </div>

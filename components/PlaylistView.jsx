@@ -3,18 +3,10 @@ import { signOut, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import Song from './Song';
 import { shuffle } from 'lodash';
+import { colors } from '@/lib/colors';
+import { changeOpacity } from '@/lib/headerFunctions';
 
-const colors = [
-    'from-indigo-500',
-    'from-blue-500',
-    'from-green-500',
-    'from-red-500',
-    'from-yellow-500',
-    'from-pink-500',
-    'from-purple-500'
-]
-
-const PlaylistView = ({ globalPlaylistId, setGlobalTrackId, setGlobalIsPlaying }) => {
+const PlaylistView = ({ globalPlaylistId, setGlobalTrackId, setGlobalIsPlaying, setView, setGlobalArtistId }) => {
     const { data: session } = useSession()
     const [color, setColor] = useState(colors[0])
     const [opacity, setOpacity] = useState(0)
@@ -57,7 +49,7 @@ const PlaylistView = ({ globalPlaylistId, setGlobalTrackId, setGlobalIsPlaying }
 
 
     return (
-        <div className="flex-grow bg-green-100 h-screen">
+        <div className="flex-grow h-screen">
             <header style={{ opacity: opacity }} className="text-white sticky top-0 h-20 z-10 text-4xl bg-neutral-800 p-8 flex items-center font-bold">
                 <div style={{ opacity: textOpacity }} className="flex items-center gap-6">
                     <img className="h-8 w-8" src={playlistState?.images[0].url} />
@@ -79,7 +71,15 @@ const PlaylistView = ({ globalPlaylistId, setGlobalTrackId, setGlobalIsPlaying }
                 </section>
                 <div className="flex flex-col text-white space-y-1 px-8 pb-28">
                     {playlistState?.tracks.items.map((track, i) => {
-                        return <Song setGlobalIsPlaying={setGlobalIsPlaying} setGlobalTrackId={setGlobalTrackId} sno={i} key={track.track.id} track={track} />
+                        return <Song
+                            setGlobalIsPlaying={setGlobalIsPlaying}
+                            setGlobalTrackId={setGlobalTrackId}
+                            sno={i}
+                            key={track.track.id}
+                            track={track}
+                            setGlobalArtistId={setGlobalArtistId}
+                            setView={setView}
+                        />
                         // return <div key={track.track.id}>{track.track.name}</div>
                     })}
                 </div>

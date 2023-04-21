@@ -1,3 +1,4 @@
+import Artist from '@/components/Artist'
 import Library from '@/components/Library'
 import Player from '@/components/Player'
 import PlaylistView from '@/components/PlaylistView'
@@ -9,8 +10,9 @@ import { useState } from 'react'
 
 export default function Home() {
   const { data: session } = useSession()
-  const [view, setView] = useState("playlist") // {"playlist", "library", "search"}
+  const [view, setView] = useState("search") // {"playlist", "library", "search", "artist"}
   const [globalPlaylistId, setGlobalPlaylistId] = useState(null);
+  const [globalArtistId, setGlobalArtistId] = useState(null)
   const [globalTrackId, setGlobalTrackId] = useState(null)
   const [globalIsPlaying, setGlobalIsPlaying] = useState(false)
 
@@ -27,13 +29,23 @@ export default function Home() {
           globalPlaylistId={globalPlaylistId}
           setGlobalTrackId={setGlobalTrackId}
           setGlobalIsPlaying={setGlobalIsPlaying}
+          setGlobalArtistId={setGlobalArtistId}
+          setView={setView}
         />}
         {view == "search" && <Search
           setGlobalPlaylistId={setGlobalPlaylistId}
+          setGlobalArtistId={setGlobalArtistId}
           setView={setView}
         />}
         {view == "library" && <Library
           setGlobalPlaylistId={setGlobalPlaylistId}
+          setView={setView}
+        />}
+        {view == "artist" && <Artist
+          globalArtistId={globalArtistId}
+          setGlobalTrackId={setGlobalTrackId}
+          setGlobalIsPlaying={setGlobalIsPlaying}
+          setGlobalArtistId={setGlobalArtistId}
           setView={setView}
         />}
       </div>

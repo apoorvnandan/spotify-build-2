@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import FeaturedPlaylists from './FeaturedPlaylists';
 import SearchResults from './SearchResults';
 
-const Search = ({ setView, setGlobalPlaylistId }) => {
+const Search = ({ setView, setGlobalPlaylistId, setGlobalArtistId }) => {
     const { data: session } = useSession()
     const inputRef = useRef(null)
     const [inputValue, setInputValue] = useState('')
@@ -29,7 +29,7 @@ const Search = ({ setView, setGlobalPlaylistId }) => {
     useEffect(() => {
         async function f() {
             if (session && session.user && session.user.accessToken) {
-                const response = await fetch("https://api.spotify.com/v1/browse/featured-playlists", {
+                const response = await fetch("https://api.spotify.com/v1/browse/featured-playlists?" + new URLSearchParams({ country: "US" }), {
                     headers: {
                         Authorization: `Bearer ${session.user.accessToken}`
                     }
@@ -71,6 +71,7 @@ const Search = ({ setView, setGlobalPlaylistId }) => {
                     artists={searchData?.artists?.items}
                     setView={setView}
                     setGlobalPlaylistId={setGlobalPlaylistId}
+                    setGlobalArtistId={setGlobalArtistId}
                 />}
             </div>
         </div>
